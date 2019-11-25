@@ -13,52 +13,48 @@ class DrawerItem extends React.Component {
       case "Início":
         return (
           <Icon
-            name="shop"
-            family="ArgonExtra"
-            size={10}
-            color={focused ? "white" : argonTheme.COLORS.PRIMARY}
-          />
-        );
-      case "Elements":
-        return (
-          <Icon
-            name="map-big"
-            family="ArgonExtra"
-            size={12}
-            color={focused ? "white" : argonTheme.COLORS.ERROR}
-          />
-        );
-      case "Articles":
-        return (
-          <Icon
-            name="spaceship"
-            family="ArgonExtra"
-            size={12}
+            name="home"
+            family="AntDesign"
+            size={16}
             color={focused ? "white" : argonTheme.COLORS.PRIMARY}
           />
         );
       case "Perfil":
         return (
           <Icon
-            name="chart-pie-35"
-            family="ArgonExtra"
-            size={12}
+            name="user"
+            family="AntDesign"
+            size={16}
             color={focused ? "white" : argonTheme.COLORS.WARNING}
           />
         );
-      case "Login":
+      case "Minha agenda":
         return (
           <Icon
-            name="calendar-date"
-            family="ArgonExtra"
-            size={12}
+            name="calendar"
+            family="AntDesign"
+            size={16}
             color={focused ? "white" : argonTheme.COLORS.INFO}
           />
         );
-      case "Getting Started":
-        return <Icon />;
-      case "Log out":
-        return <Icon />;
+      case "Checkin":
+        return (
+          <Icon
+            name="qrcode"
+            family="AntDesign"
+            size={16}
+            color={focused ? "white" : argonTheme.COLORS.ICON}
+          />
+        );
+      case "Sair":
+        return (
+          <Icon
+            name="logout"
+            family="AntDesign"
+            size={16}
+            color={focused ? "white" : argonTheme.COLORS.ERROR}
+          />
+        );
       default:
         return null;
     }

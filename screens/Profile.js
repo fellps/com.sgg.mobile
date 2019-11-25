@@ -58,8 +58,10 @@ class Profile extends React.Component {
                     space="evenly"
                     style={{ marginTop: 20, paddingBottom: 24 }}
                   >
-                    <Button style={styles.invitesButton}>
-                      IR PARA CONVITES
+                    <Button 
+                      style={styles.invitesButton}
+                      onPress={() => this.props.navigation.navigate('Notifications')}>
+                      VER MEUS CONVITES
                     </Button>
                   </Block>
                   <Block row space="between">

@@ -7,6 +7,8 @@ import { Block, GalioProvider } from 'galio-framework';
 import Screens from './navigation/Screens';
 import { Images, jobs, argonTheme } from './constants';
 
+console.disableYellowBox = true;
+
 // cache app images
 const assetImages = [
   Images.Onboarding,

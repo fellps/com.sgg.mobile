@@ -21,7 +21,7 @@ class NotificationDetails extends React.Component {
   state = {
     textShown: false,
     show: false,
-    longText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in odio id libero rutrum dictum. Praesent in fermentum urna, sit amet viverra lorem. Nam sodales, ligula efficitur bibendum convallis, quam dui facilisis enim, eu iaculis nibh tellus eget nunc. Nulla auctor enim id mi tincidunt, vitae molestie dolor ullamcorper. In hendrerit malesuada arcu vel dignissim. Maecenas gravida lectus vitae lectus lacinia, id ultrices mauris feugiat. Curabitur porta, erat et consectetur vestibulum, nisl metus sagittis urna, at feugiat tellus nisl sit amet enim.'
+    longText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in odio id libero rutrum dictum. Praesent in fermentum urna, sit amet viverra lorem. Nam sodales, ligula efficitur bibendum convallis, quam dui facilisis enim, eu iaculis nibh tellus eget nunc.'
   };
 
   handleBack = () => {
@@ -36,7 +36,10 @@ class NotificationDetails extends React.Component {
       button: true,
       textBody: 'Você aceitou o convite para trabalhar como Bartender!',
       buttonText: 'Ver minha agenda',
-      callback: () => this.handleBack()
+      callback: () => {
+        this.props.navigation.navigate('Home');
+        this.props.navigation.navigate('Schedule');
+      }
     })
   }
 
@@ -47,11 +50,37 @@ class NotificationDetails extends React.Component {
       button: true,
       textBody: 'Você recusou este trabalho!',
       buttonText: 'Ok',
-      callback: () => this.handleBack()
-    })  
+      callback: () => this.props.navigation.navigate('Home')
+    })
   }
 
   render() {
+    const { navigation } = this.props;
+
+    let buttons;
+
+    if (navigation.getParam('job')) {
+      buttons = 
+        <Block row space="evenly" style={styles.blockButtons}>
+          <Block flex left>
+            <Button 
+              color="warning" 
+              style={styles.optionsButton}
+              onPress={this.handleReject}>
+              RECUSAR
+            </Button>
+          </Block>
+          <Block flex right>
+            <Button 
+              color="success" 
+              style={styles.optionsButton} 
+              onPress={this.handleAccept}>
+              ACEITAR
+            </Button>
+          </Block>
+        </Block>
+    }
+
     return (
       <Root>
         <Block flex style={styles.profile}>
@@ -100,24 +129,7 @@ class NotificationDetails extends React.Component {
                       >
                         {this.state.longText}
                       </Text>
-                      <Block row space="evenly" style={styles.blockButtons}>
-                        <Block flex left>
-                          <Button 
-                            color="warning" 
-                            style={styles.optionsButton}
-                            onPress={this.handleReject}>
-                            RECUSAR
-                          </Button>
-                        </Block>
-                        <Block flex right>
-                          <Button 
-                            color="success" 
-                            style={styles.optionsButton} 
-                            onPress={this.handleAccept}>
-                            ACEITAR
-                          </Button>
-                        </Block>
-                      </Block>
+                      {buttons}
                     </Block>
                   </Block>
                 </Block>

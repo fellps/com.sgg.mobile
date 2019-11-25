@@ -6,18 +6,19 @@ import {
   createAppContainer
 } from "react-navigation";
 
-import { Block } from "galio-framework";
-
 // screens
 import Home from "../screens/Home";
 import Onboarding from "../screens/Onboarding";
 import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
+import Checkin from "../screens/Checkin";
 import Login from "../screens/Login";
 import Elements from "../screens/Elements";
 import Articles from "../screens/Articles";
 import Notifications from "../screens/Notifications";
 import NotificationDetails from "../screens/NotificationDetails";
+import Schedule from "../screens/Schedule";
+
 // drawer
 import Menu from "./Menu";
 import DrawerItem from "../components/DrawerItem";
@@ -106,6 +107,36 @@ const ProfileStack = createStackNavigator(
   }
 );
 
+const CheckinStack = createStackNavigator(
+  {
+    Checkin: {
+      screen: Checkin,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header title="Checkin" navigation={navigation} />
+      })
+    }
+  },
+  {
+    cardStyle: { backgroundColor: "#FFFFFF" },
+    transitionConfig
+  }
+);
+
+const ScheduleStack = createStackNavigator(
+  {
+    Schedule: {
+      screen: Schedule,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header title="Minha agenda" navigation={navigation} />
+      })
+    }
+  },
+  {
+    cardStyle: { backgroundColor: "#FFFFFF" },
+    transitionConfig
+  }
+);
+
 const HomeStack = createStackNavigator(
   {
     Home: {
@@ -165,29 +196,41 @@ const AppStack = createDrawerNavigator(
         )
       })
     },
+    Schedule: {
+      screen: ScheduleStack,
+      navigationOptions: navOpt => ({
+        drawerLabel: ({ focused }) => (
+          <DrawerItem focused={focused} screen="Schedule" title="Minha agenda" />
+        )
+      })
+    },
+    Checkin: {
+      screen: CheckinStack,
+      navigationOptions: navOpt => ({
+        drawerLabel: ({ focused }) => (
+          <DrawerItem focused={focused} screen="Checkin" title="Checkin" />
+        )
+      })
+    },
     Login: {
       screen: Login,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Login" title="Login" />
+          <DrawerItem focused={focused} screen="Login" title="Sair" />
         )
       })
     },
     Elements: {
       screen: ElementsStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Elements" title="Elements" />
-        )
-      })
+      navigationOptions: {
+        drawerLabel: () => {}
+      }
     },
     Articles: {
       screen: ArticlesStack,
-      navigationOptions: navOpt => ({
-        drawerLabel: ({ focused }) => (
-          <DrawerItem focused={focused} screen="Articles" title="Articles" />
-        )
-      })
+      navigationOptions: {
+        drawerLabel: () => {}
+      }
     }
   },
   Menu

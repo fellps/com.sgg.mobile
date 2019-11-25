@@ -9,7 +9,7 @@ import {
 //galio
 import { Block, Text, theme } from "galio-framework";
 //argon
-import { jobs, jobsHighlights, Images, argonTheme } from "../constants/";
+import { jobs, argonTheme } from "../constants/";
 import { Card } from "../components/";
 
 const { width } = Dimensions.get("screen");
@@ -25,7 +25,7 @@ class Home extends React.Component {
       <TouchableWithoutFeedback
         style={{ zIndex: 3 }}
         key={`product-${item.title}`}
-        onPress={() => navigation.navigate("Pro", { product: item })}
+        onPress={() => navigation.navigate("NotificationDetails", { product: item })}
       >
         <Block center style={styles.productItem}>
           <Image
@@ -66,83 +66,12 @@ class Home extends React.Component {
     return (
       <Block flex style={styles.group}>
         <Text bold size={16} style={styles.title}>
-          Destaques
+          Meus convites
         </Text>
-        <Block flex>
-          <Block flex style={{ marginTop: theme.SIZES.BASE / 2 }}>
-            <ScrollView
-              horizontal={true}
-              pagingEnabled={true}
-              decelerationRate={0}
-              scrollEventThrottle={16}
-              snapToAlignment="center"
-              showsHorizontalScrollIndicator={false}
-              snapToInterval={cardWidth + theme.SIZES.BASE * 0.375}
-              contentContainerStyle={{
-                paddingHorizontal: theme.SIZES.BASE / 2
-              }}
-            >
-              {jobsHighlights &&
-                jobsHighlights.map((item, index) =>
-                  this.renderProduct(item, index)
-                )}
-            </ScrollView>
-          </Block>
-          <Text bold size={16} style={styles.title}>
-            Mais oportunidades
-          </Text>
-          <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
-            <Card item={jobs[0]} horizontal />
-            <Block flex row>
-              <Card
-                item={jobs[1]}
-                style={{ marginRight: theme.SIZES.BASE }}
-              />
-              <Card item={jobs[2]} />
-            </Block>
-            <Card item={jobs[4]} full />
-          </Block>
-        </Block>
-      </Block>
-    );
-  };
-
-  renderAlbum = () => {
-    const { navigation } = this.props;
-
-    return (
-      <Block
-        flex
-        style={[styles.group, { paddingBottom: theme.SIZES.BASE * 5 }]}
-      >
-        <Text bold size={16} style={styles.title}>
-          Album
-        </Text>
-        <Block style={{ marginHorizontal: theme.SIZES.BASE * 2 }}>
-          <Block flex right>
-            <Text
-              size={12}
-              color={theme.COLORS.PRIMARY}
-              onPress={() => navigation.navigate("Home")}
-            >
-              View All
-            </Text>
-          </Block>
-          <Block
-            row
-            space="between"
-            style={{ marginTop: theme.SIZES.BASE, flexWrap: "wrap" }}
-          >
-            {Images.Viewed.map((img, index) => (
-              <Block key={`viewed-${img}`} style={styles.shadow}>
-                <Image
-                  resizeMode="cover"
-                  source={{ uri: img }}
-                  style={styles.albumThumb}
-                />
-              </Block>
-            ))}
-          </Block>
+        <Block style={{ paddingHorizontal: theme.SIZES.BASE }}>
+          {jobs && jobs.map((item, index) =>
+            <Card item={item} horizontal />
+          )}
         </Block>
       </Block>
     );
@@ -150,12 +79,11 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Block flex center>
+      <Block flex>
         <ScrollView
           showsVerticalScrollIndicator={false}
         >
           {this.renderCards()}
-          { /* this.renderAlbum() */}
         </ScrollView>
       </Block>
     );

@@ -5,7 +5,8 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Linking
 } from "react-native";
 import { Block, Text } from "galio-framework";
 
@@ -15,6 +16,21 @@ import { Images, argonTheme } from "../constants";
 const { width, height } = Dimensions.get("screen");
 
 class Login extends React.Component {
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const login = {
+      email: this.state.email, 
+      password: this.state.password
+    };
+
+    axios.post(`https://jsonplaceholder.typicode.com/users`, { login })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+  }
+
   render() {
     const { navigation } = this.props;
 
@@ -88,6 +104,7 @@ class Login extends React.Component {
                         <Text 
                           style={styles.textLink}
                           color={argonTheme.COLORS.DEFAULT}
+                          onPress={() => Linking.openURL('http://sgg-site.s3-website-sa-east-1.amazonaws.com/')}
                         >
                           Cadastrar
                         </Text>

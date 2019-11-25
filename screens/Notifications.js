@@ -24,8 +24,6 @@ class Notifications extends React.Component {
           <View style={styles.row}>
             <View style={styles.row_cell_timeplace}>
               <Text style={styles.row_place}>{item.job}</Text>
-              {/* <Text style={styles.row_date}>{item.date}</Text>
-              <Text style={styles.row_date}>{item.place}</Text> */}
               <Text style={styles.row_description}>Oportunidade para trabalhar como bartender no evento Baile da Santinha..</Text>
               <Text style={styles.row_time}>{item.time}</Text>
             </View>

@@ -24,7 +24,7 @@ const BellButton = ({isWhite, style, navigation}) => (
 );
 
 const BasketButton = ({isWhite, style, navigation}) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('NotificationDetails')}>
     <Icon
       family="ArgonExtra"
       size={16}
@@ -35,7 +35,7 @@ const BasketButton = ({isWhite, style, navigation}) => (
 );
 
 const SearchButton = ({isWhite, style, navigation}) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
+  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('NotificationDetails')}>
     <Icon
       size={16}
       family="Galio"
@@ -82,11 +82,19 @@ class Header extends React.Component {
         return ([
           <BellButton key='chat-profile' navigation={navigation} isWhite={white} />
         ]);
+      case 'Schedule':
+        return ([
+          <BellButton key='chat-profile' navigation={navigation} isWhite={white} />
+        ]);
       case 'Product':
         return ([
           <SearchButton key='search-product' navigation={navigation} isWhite={white} />
         ]);
       case 'Search':
+        return ([
+          <BellButton key='chat-search' navigation={navigation} isWhite={white} />
+        ]);
+      case 'Checkin':
         return ([
           <BellButton key='chat-search' navigation={navigation} isWhite={white} />
         ]);
@@ -107,7 +115,6 @@ class Header extends React.Component {
         style={styles.search}
         placeholder="Pesquisar por uma oportunidade"
         placeholderTextColor={'#8898AA'}
-        onFocus={() => navigation.navigate('Pro')}
         iconContent={<Icon size={16} color={theme.COLORS.MUTED} name="search-zoom-in" family="ArgonExtra" />}
       />
     );
@@ -117,13 +124,13 @@ class Header extends React.Component {
 
     return (
       <Block row style={styles.options}>
-        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('NotificationDetails')}>
           <Block row middle>
             <Icon name="diamond" family="ArgonExtra" style={{ paddingRight: 8 }} color={argonTheme.COLORS.ICON} />
             <Text size={16} style={styles.tabTitle}>{optionLeft || 'Beauty'}</Text>
           </Block>
         </Button>
-        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
+        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('NotificationDetails')}>
           <Block row middle>
             <Icon size={16} name="bag-17" family="ArgonExtra" style={{ paddingRight: 8 }} color={argonTheme.COLORS.ICON}/>
             <Text size={16} style={styles.tabTitle}>{optionRight || 'Fashion'}</Text>
