@@ -17,6 +17,7 @@ import Elements from "../screens/Elements";
 import Articles from "../screens/Articles";
 import Notifications from "../screens/Notifications";
 import NotificationDetails from "../screens/NotificationDetails";
+import EventDetails from "../screens/EventDetails";
 import Schedule from "../screens/Schedule";
 
 // drawer
@@ -142,7 +143,7 @@ const HomeStack = createStackNavigator(
     Home: {
       screen: Home,
       navigationOptions: ({ navigation }) => ({
-        header: <Header search title="Início" navigation={navigation} />
+        header: <Header title="Início" navigation={navigation} />
       })
     },
     Pro: {
@@ -162,7 +163,13 @@ const HomeStack = createStackNavigator(
       navigationOptions: ({ navigation }) => ({
         header: <Header back title="Mais detalhes" navigation={navigation} />
       })
-    }
+    },
+    EventDetails: {
+      screen: EventDetails,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header back title="Mais detalhes" navigation={navigation} />
+      })
+    },
   },
   {
     cardStyle: {
@@ -171,7 +178,7 @@ const HomeStack = createStackNavigator(
     transitionConfig
   }
 );
-// divideru se baga ca si cum ar fi un ecrna dar nu-i nimic duh
+
 const AppStack = createDrawerNavigator(
   {
     Onboarding: {

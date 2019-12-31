@@ -9,11 +9,14 @@ import {
   Dimensions
 } from "react-native";
 import { Block, Button, Text, theme } from "galio-framework";
+import { AsyncStorage } from 'react-native';
 
 const { height, width } = Dimensions.get("screen");
 
 import argonTheme from "../constants/Theme";
 import Images from "../constants/Images";
+
+import _ from 'lodash'
 
 class Onboarding extends React.Component {
   registerForPushNotificationsAsync = async () => {
@@ -32,12 +35,30 @@ class Onboarding extends React.Component {
     }
     
     let token = await Notifications.getExpoPushTokenAsync();
-    console.log(token);
+    AsyncStorage.setItem('pushToken', token)
   }
 
   async componentDidMount() {
+    const { navigation } = this.props;
+
     await this.registerForPushNotificationsAsync();
+    Notifications.addListener(this._handleNotification);
+
+
+    const loggedUserCookie = await AsyncStorage.getItem('loggedUser')
+    const welcome = await AsyncStorage.getItem('welcome')
+
+    if (!_.isEmpty(JSON.parse(loggedUserCookie))) {
+      navigation.navigate("Home");
+    } else if (welcome) {
+      navigation.navigate("Login");
+    }
   }
+
+  _handleNotification = (notification) => {
+    const { navigation } = this.props;
+    navigation.navigate("NotificationDetails", { job: notification.data });
+  };
 
   render() {
     const { navigation } = this.props;
@@ -77,7 +98,10 @@ class Onboarding extends React.Component {
                 <Button
                   style={styles.button}
                   color={argonTheme.COLORS.SECONDARY}
-                  onPress={() => navigation.navigate("Login")}
+                  onPress={() => { 
+                    AsyncStorage.setItem('welcome', true);
+                    navigation.navigate("Login");
+                  }}
                   textStyle={{ color: argonTheme.COLORS.BLACK }}
                 >
                   Vamos lá!

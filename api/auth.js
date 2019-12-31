@@ -1,5 +1,6 @@
 import request from './index'
+import qs from 'querystring'
 
-export const login = async ({ email, password }) => request.post('/auth/login', {
-    email, password
-})
+export const login = async ({ Login, Password }) => request.post('/authenticate', qs.stringify({
+    Login, Password
+}))

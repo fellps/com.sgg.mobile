@@ -1,64 +1,58 @@
 import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   RefreshControl,
-  ActivityIndicator
+  ActivityIndicator,
+  Text
 } from 'react-native';
-import Timeline from 'react-native-timeline-listview'
+import { connect } from 'react-redux';
 
-export default class Schedule extends Component {
+import LoadingScreen from '../components/Loading'
+
+import Timeline from 'react-native-timeline-listview';
+
+import { getSchedule } from './reducers/notifications/actions';
+
+class Schedule extends Component {
   constructor(){
     super()
     this.onEndReached = this.onEndReached.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onRefresh = this.onRefresh.bind(this)
 
-    this.data = [
-        {time: '27/11 às 16:00', title: 'Bartender', description: `Local: Estádio Mané Garrincha\nAlguma outra observação..`, circleColor: '#009688',lineColor:'#009688'},
-        {time: '28/11 às 18:00', title: 'Bartender', description: `Local: Estádio Mané Garrincha\nAlguma outra observação..`},
-        {time: '29/11 às 19:00', title: 'Bartender', description: `Local: Estádio Mané Garrincha\nAlguma outra observação..`},
-        {time: '05/12 às 20:00', title: 'Garçom', description: `Local: Estádio Mané Garrincha\nAlguma outra observação..`},
-        {time: '06/12 às 17:00', title: 'Garçom', description: `Local: Estádio Mané Garrincha\nAlguma outra observação..`}
-    ]
-
     this.state = {
       isRefreshing: false,      
       waiting: false,
-      data: this.data
+      data: []
     }
-  } 
+  }
 
-  onRefresh(){
+  async componentDidMount() {
+    this.getJobs()
+  }
+
+  async getJobs(){
+    const { dispatchGetSchedule } = this.props;
+    const { value: { data: schedule } } = await dispatchGetSchedule();
+
+    if (schedule.data.length > 0) {
+      schedule.data[0].circleColor = '#009688';
+      schedule.data[0].lineColor ='#009688';
+    }
+
+    this.setState({ data: schedule.data });
+  }
+
+  async onRefresh(){
     this.setState({isRefreshing: true});
-    //refresh to initial data
-    setTimeout(() => {
-      //refresh to initial data
-      this.setState({
-        data: this.data,
-        isRefreshing: false
-      });
-    }, 2000);
+    await this.getJobs();
+    this.setState({isRefreshing: false});
   }
 
   onEndReached() {
     if (!this.state.waiting) {
-        this.setState({waiting: true});
-
-        //fetch and concat data
-        setTimeout(() => {
-
-          //refresh to initial data
-          var data = this.state.data.concat([
-            {time: '07/12 às 17:00', title: 'Garçom', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec efficitur nisl in egestas tincidunt. '}
-          ])
-
-          this.setState({
-            waiting: false,
-            data: data,
-          });
-        }, 2000);
+      this.setState({waiting: false});
     }
   }
 
@@ -69,31 +63,43 @@ renderFooter() {
   }
 
   render() {
+    if (this.state.data.length <= 0) {
+      return (
+        <LoadingScreen visible={this.props.isLoading}>
+          <View style={styles.v_container}>
+            <Text>Sua agenda está vazia</Text>
+          </View>
+        </LoadingScreen>
+      );
+    }
+
     return (
-      <View style={styles.container}>
-        <Timeline
-          style={styles.list}
-          data={this.state.data}
-          circleSize={20}
-          circleColor='#5E72E4'
-          lineColor='#5E72E4'
-          timeContainerStyle={{minWidth:52, marginTop: -1}}
-          timeStyle={{textAlign: 'center', backgroundColor:'#5E72E4', color:'white', padding:5, borderRadius:13}}
-          descriptionStyle={{color:'gray'}}
-          options={{
-            style:{paddingTop:5},
-            refreshControl: (
-              <RefreshControl
-                refreshing={this.state.isRefreshing}
-                onRefresh={this.onRefresh}
-              />
-            ),
-            renderFooter: this.renderFooter,
-            onEndReached: this.onEndReached
-          }}
-          innerCircle={'dot'}
-        />
-      </View>
+      <LoadingScreen visible={this.props.isLoading}>
+        <View style={styles.container}>
+          <Timeline
+            style={styles.list}
+            data={this.state.data}
+            circleSize={20}
+            circleColor='#5E72E4'
+            lineColor='#5E72E4'
+            timeContainerStyle={{minWidth:52, marginTop: -1}}
+            timeStyle={{textAlign: 'center', backgroundColor:'#5E72E4', color:'white', padding:5, borderRadius:13}}
+            descriptionStyle={{color:'gray'}}
+            options={{
+              style:{paddingTop:5},
+              refreshControl: (
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this.onRefresh}
+                />
+              ),
+              renderFooter: this.renderFooter,
+              onEndReached: this.onEndReached
+            }}
+            innerCircle={'dot'}
+          />
+        </View>
+      </LoadingScreen>
     );
   }
 }
@@ -108,4 +114,23 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 40,
   },
+  v_container: {
+    flex: 1,
+    padding: 8,
+    flexDirection: 'column', // main axis
+    justifyContent: 'center', // main axis
+    alignItems: 'center', // cross axis
+    backgroundColor: '#F0F0F0',
+}
 });
+
+const mapStateToProps = state => ({
+  isLoading: state.isLoading[getSchedule]
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatch,
+  dispatchGetSchedule: params => dispatch(getSchedule(params))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Schedule);

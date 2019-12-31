@@ -1,25 +1,35 @@
 import React, { Component } from 'react'
 import QRCode from 'react-native-qrcode';
 import { Block, Text, theme } from "galio-framework";
-
+import { connect } from 'react-redux';
 import { StyleSheet } from 'react-native';
 
 import { argonTheme } from "../constants/";
+
+import { loggedUser } from '../api'
  
-export default class Checkin extends Component {
-  state = {
-    text: 'e10adc3949ba59abbe56e057f20f883e',
-  };
+class Checkin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      code: ''
+    };
+  }
+  
+  async componentDidMount() {
+    const { user: { data: { QrCode } } } = await loggedUser();
+    this.setState({ code: QrCode });
+  }
  
   render() {
     return (
-      <Block flex middle>
+      <Block flex middle enableEmptySections={true}>
         <Block flex style={styles.qrcode}>
           <Text bold size={16} style={styles.title}>
             Leia esse QRCode para fazer o checkin :)
           </Text>
           <QRCode
-            value={this.state.text}
+            value={this.state.code}
             size={300}
             fgColor='white'/>
         </Block>
@@ -41,3 +51,12 @@ const styles = StyleSheet.create({
         color: argonTheme.COLORS.HEADER
     }
 });
+
+const mapStateToProps = state => ({
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatch
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkin);

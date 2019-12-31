@@ -1,7 +1,7 @@
 {
-  "name": "argon-react-native",
-  "version": "1.3.0",
-  "description": "Argon React Native, based on Argon Design System. Coded by Creative Tim",
+  "name": "sgg",
+  "version": "1.0.0",
+  "description": "Sistema de gestão de gente",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -14,45 +14,39 @@
     "url": "git+https://github.com/creativetimofficial/argon-react-native.git"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "expo": "^35.0.0",
     "expo-asset": "~7.0.0",
     "expo-font": "~7.0.0",
     "expo-permissions": "~7.0.0",
     "galio-framework": "^0.6.3",
     "prop-types": "^15.7.2",
+    "querystring": "^0.2.0",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-gesture-handler": "~1.3.0",
+    "react-native-loading-dots": "^1.1.1",
+    "react-native-loading-spinner-overlay": "^1.0.1",
     "react-native-modal-dropdown": "^0.6.2",
     "react-native-qrcode": "^0.2.7",
     "react-native-timeline-listview": "^0.2.3",
-    "react-navigation": "^3.11.0"
+    "react-navigation": "^3.11.0",
+    "react-redux": "^7.1.3",
+    "redux": "^4.0.4",
+    "redux-act": "^1.7.7",
+    "redux-promise-middleware": "^6.1.2"
   },
   "devDependencies": {
     "babel-preset-expo": "^7.0.0"
   },
   "keywords": [
-    "argon react native",
-    "argon design system",
-    "argon app react native",
-    "argon iOS",
-    "react native iOS",
-    "creative tim",
-    "argon Android",
-    "react native ui kit",
-    "react native expo",
-    "freebie",
-    "react native argon design",
-    "react native galio",
-    "galio argon free",
-    "galio react native free app",
-    "argon expo react native",
-    "react native ui template"
+    "sgg",
+    "sistema de gestão de gente"
   ],
-  "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
-  "license": "MIT",
+  "author": "Fellipe Vasconcelos <fellipe.fvs@gmail.com>",
+  "license": "unlicensed",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/argon-react-native/issues"
+    "url": "https://github.com/fellps/com.sgg.mobile"
   },
-  "homepage": "https://demos.creative-tim.com/argon-react-native"
+  "homepage": "http://sgg-site.s3-website-sa-east-1.amazonaws.com"
 }

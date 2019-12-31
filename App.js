@@ -3,9 +3,11 @@ import { Image } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import { Block, GalioProvider } from 'galio-framework';
+import { Provider } from 'react-redux';
 
 import Screens from './navigation/Screens';
 import { Images, jobs, argonTheme } from './constants';
+import store from './state/store'
 
 console.disableYellowBox = true;
 
@@ -49,11 +51,13 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <GalioProvider theme={argonTheme}>
-          <Block flex>
-            <Screens />
-          </Block>
-        </GalioProvider>
+        <Provider store={store}>
+          <GalioProvider theme={argonTheme}>
+            <Block flex>
+              <Screens />
+            </Block>
+          </GalioProvider>
+        </Provider>
       );
     }
   }
@@ -73,5 +77,4 @@ export default class App extends React.Component {
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
   };
-
 }

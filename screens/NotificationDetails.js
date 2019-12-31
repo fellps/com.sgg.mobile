@@ -7,50 +7,78 @@ import {
   Platform,
   StatusBar
 } from "react-native";
+import { connect } from 'react-redux';
+
 import { Block, Text, theme } from "galio-framework";
 
 import { Button, Root, Popup } from "../components";
+import LoadingScreen from '../components/Loading'
+
 import { Images } from "../constants";
 import { HeaderHeight } from "../constants/utils";
+
+import { accept } from './reducers/notifications/actions';
 
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
 class NotificationDetails extends React.Component {
-  state = {
-    textShown: false,
-    show: false,
-    longText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas in odio id libero rutrum dictum. Praesent in fermentum urna, sit amet viverra lorem. Nam sodales, ligula efficitur bibendum convallis, quam dui facilisis enim, eu iaculis nibh tellus eget nunc.'
-  };
 
   handleBack = () => {
     const { navigation } = this.props;
     return navigation.goBack();
   }
 
-  handleAccept = () => {
-    Popup.show({
-      type: 'Success',
-      title: 'Parabéns :)',
-      button: true,
-      textBody: 'Você aceitou o convite para trabalhar como Bartender!',
-      buttonText: 'Ver minha agenda',
-      callback: () => {
-        this.props.navigation.navigate('Home');
-        this.props.navigation.navigate('Schedule');
-      }
+  handleAccept = async () => {
+    const { navigation, dispatchAccept } = this.props;
+    const job = navigation.getParam('job');
+
+    const { value: { data: result } } = await dispatchAccept({ 
+      IdJob: job.IdJob, 
+      Accepted: true 
     })
+
+    if (result.error) {
+      Popup.show({
+        type: 'Danger',
+        title: 'Que pena :(',
+        button: true,
+        textBody: 'As vagas para este trabalho se esgotaram!',
+        buttonText: 'Ok',
+        callback: async () => this.props.navigation.navigate('Home')
+      })
+    } else {
+      Popup.show({
+        type: 'Success',
+        title: 'Parabéns :)',
+        button: true,
+        textBody: 'Você aceitou o convite para trabalhar como Bartender!',
+        buttonText: 'Ver minha agenda',
+        callback: async () => {
+          this.props.navigation.navigate('Home');
+          this.props.navigation.navigate('Schedule');
+        }
+      })
+    }
   }
 
-  handleReject = () => {
+  handleReject = async () => {
+    const { navigation, dispatchAccept } = this.props;
+    const job = navigation.getParam('job');
+
+    const { value: { data: result } } = await dispatchAccept({ 
+      IdJob: job.IdJob, 
+      Accepted: false 
+    })
+
     Popup.show({
       type: 'Danger',
       title: 'Que pena :(',
       button: true,
       textBody: 'Você recusou este trabalho!',
       buttonText: 'Ok',
-      callback: () => this.props.navigation.navigate('Home')
+      callback: async () => this.props.navigation.navigate('Home')
     })
   }
 
@@ -59,7 +87,9 @@ class NotificationDetails extends React.Component {
 
     let buttons;
 
-    if (navigation.getParam('job')) {
+    const job = navigation.getParam('job')
+
+    if (job && job.Accepted == null) {
       buttons = 
         <Block row space="evenly" style={styles.blockButtons}>
           <Block flex left>
@@ -83,60 +113,62 @@ class NotificationDetails extends React.Component {
 
     return (
       <Root>
-        <Block flex style={styles.profile}>
-          <StatusBar barStyle="light-content" />
-          <Block flex>
-            <ImageBackground
-              source={Images.ProfileBackground}
-              style={styles.profileContainer}
-              imageStyle={styles.profileBackground}
-            >
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={{ width, marginTop: '25%' }}
+        <LoadingScreen visible={this.props.isLoading}>
+          <Block flex style={styles.profile}>
+            <StatusBar barStyle="light-content" />
+            <Block flex>
+              <ImageBackground
+                source={Images.ProfileBackground}
+                style={styles.profileContainer}
+                imageStyle={styles.profileBackground}
               >
-                <Block flex style={styles.profileCard}>
-                  <Block middle style={styles.avatarContainer}>
-                    <Text
-                      bold
-                      size={25}
-                      color="#FFFFFF"
-                      style={{ marginBottom: 4 }}
-                    >
-                      Oportunidade para você
-                    </Text>
-                  </Block>
-                  <Block flex>
-                    <Block middle style={styles.nameInfo}>
-                      <Text bold size={28} color="#32325D">
-                        Bartender
-                      </Text>
-                      <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                        Data: 27/11/2019 às 16:00h
-                      </Text>
-                      <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                        Local: Estádio Mané Garrincha, Brasília, DF
-                      </Text>
-                    </Block>
-                    <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                      <Block style={styles.divider} />
-                    </Block>
-                    <Block middle>
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  style={{ width, marginTop: '25%' }}
+                >
+                  <Block flex style={styles.profileCard}>
+                    <Block middle style={styles.avatarContainer}>
                       <Text
-                        size={16}
-                        color="#525F7F"
-                        style={{ textAlign: "center" }}
+                        bold
+                        size={25}
+                        color="#FFFFFF"
+                        style={{ marginBottom: 4 }}
                       >
-                        {this.state.longText}
+                        Oportunidade para você
                       </Text>
-                      {buttons}
+                    </Block>
+                    <Block flex>
+                      <Block middle style={styles.nameInfo}>
+                        <Text bold size={28} color="#32325D">
+                          {job.Title}
+                        </Text>
+                        <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
+                          Data: {job.StartAt}
+                        </Text>
+                        <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
+                          {job.Address}
+                        </Text>
+                      </Block>
+                      <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
+                        <Block style={styles.divider} />
+                      </Block>
+                      <Block middle>
+                        <Text
+                          size={16}
+                          color="#525F7F"
+                          style={{ textAlign: "center" }}
+                        >
+                          {job.Body}
+                        </Text>
+                        {buttons}
+                      </Block>
                     </Block>
                   </Block>
-                </Block>
-              </ScrollView>
-            </ImageBackground>
+                </ScrollView>
+              </ImageBackground>
+            </Block>
           </Block>
-        </Block>
+        </LoadingScreen>
       </Root>
     );
   }
@@ -213,4 +245,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NotificationDetails;
+const mapStateToProps = state => ({
+  isLoading: state.isLoading[accept]
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatch,
+  dispatchAccept: params => dispatch(accept(params))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationDetails);

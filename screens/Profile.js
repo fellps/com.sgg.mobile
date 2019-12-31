@@ -6,24 +6,42 @@ import {
   Image,
   ImageBackground,
   Platform,
-  FlatList,
-  View
 } from "react-native";
+import { connect } from 'react-redux';
+
 import { Block, Text, theme } from "galio-framework";
 
 import { Button } from "../components";
-import { Images, argonTheme } from "../constants";
+import { Images } from "../constants";
+import LoadingScreen from '../components/Loading'
+
 import { HeaderHeight } from "../constants/utils";
+
+import { get } from './reducers/users/actions';
 
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
 
 class Profile extends React.Component {
-  state = {
-    textShown: false,
-    longText: 'Sou uma pessoa de bem com a vida. Tento viver as virtudes da generosidade, justiça e outras que são fundamentais nessa trajetória de nossas vidas. Meu mestre maior é Jesus Cristo e com ele tento aprender a melhor forma de conduzir a vida. Me considero hiperativa e às vezes me preocupo com essa característica, mas tenho procurado usar essa característica a meu favor sendo pró-ativa em meus trabalhos.'
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      textShown: false,
+      user: {
+        Name: '',
+        ProfileImages: [{
+          Url: ''
+        }]
+      }
+    };
+  }
+  
+  async componentDidMount() {
+    const { dispatchGet } = this.props;
+    const { value: { data: user } } = await dispatchGet();
+    this.setState({ user: user.data });
+  }
 
   toggleNumberOfLines = () => {
     this.setState({
@@ -32,134 +50,103 @@ class Profile extends React.Component {
   };
 
   render() {
+    const { user } = this.state;
+    
     return (
-      <Block flex style={styles.profile}>
-        <Block flex>
-          <ImageBackground
-            source={Images.ProfileBackground}
-            style={styles.profileContainer}
-            imageStyle={styles.profileBackground}
-          >
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={{ width, marginTop: '25%' }}
+      <LoadingScreen visible={this.props.isLoading}>
+        <Block flex style={styles.profile}>
+          <Block flex>
+            <ImageBackground
+              source={Images.ProfileBackground}
+              style={styles.profileContainer}
+              imageStyle={styles.profileBackground}
             >
-              <Block flex style={styles.profileCard}>
-                <Block middle style={styles.avatarContainer}>
-                  <Image
-                    source={{ uri: Images.ProfilePicture }}
-                    style={styles.avatar}
-                  />
-                </Block>
-                <Block style={styles.info}>
-                  <Block
-                    middle
-                    row
-                    space="evenly"
-                    style={{ marginTop: 20, paddingBottom: 24 }}
-                  >
-                    <Button 
-                      style={styles.invitesButton}
-                      onPress={() => this.props.navigation.navigate('Notifications')}>
-                      VER MEUS CONVITES
-                    </Button>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                style={{ width, marginTop: '25%' }}
+              >
+                <Block flex style={styles.profileCard}>
+                  <Block middle style={styles.avatarContainer}>
+                    <Image
+                      source={{ uri: user.ProfileImages[0].Url }}
+                      style={styles.avatar}
+                    />
                   </Block>
-                  <Block row space="between">
-                    <Block middle>
-                      <Text
-                        bold
-                        size={12}
-                        color="#525F7F"
-                        style={{ marginBottom: 4 }}
-                      >
-                        2
-                      </Text>
-                      <Text size={12}>{` Convites\nem aberto`}</Text>
-                    </Block>
-                    <Block middle>
-                      <Text
-                        bold
-                        color="#525F7F"
-                        size={12}
-                        style={{ marginBottom: 4 }}
-                      >
-                        1
-                      </Text>
-                      <Text size={12}>{`  Eventos\nRealizados`}</Text>
-                    </Block>
-                    <Block middle>
-                      <Text
-                        bold
-                        color="#525F7F"
-                        size={12}
-                        style={{ marginBottom: 4 }}
-                      >
-                        6
-                      </Text>
-                      <Text size={12}>{` Fotos\nno Pefil`}</Text>
-                    </Block>
-                  </Block>
-                </Block>
-                <Block flex>
-                  <Block middle style={styles.nameInfo}>
-                    <Text bold size={28} color="#32325D">
-                      Jessica Silva, 27
-                    </Text>
-                    <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                      Brasília, DF
-                    </Text>
-                  </Block>
-                  <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                    <Block style={styles.divider} />
-                  </Block>
-                  <Block middle>
-                    <Text
-                      numberOfLines={this.state.textShown ? undefined : 2}
-                      size={16}
-                      color="#525F7F"
-                      style={{ textAlign: "center" }}
+                  <Block style={styles.info}>
+                    <Block
+                      middle
+                      row
+                      space="evenly"
+                      style={{ marginTop: 20, paddingBottom: 24 }}
                     >
-                      {this.state.longText}
-                    </Text>
-                    <Button
-                      onPress={() => this.toggleNumberOfLines()}
-                      style={{ marginTop: 10 }}
-                      color="transparent"
-                      textStyle={{
-                        color: "#233DD2",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
+                      <Button 
+                        style={styles.invitesButton}
+                        onPress={() => this.props.navigation.navigate('Notifications')}>
+                        VER MEUS CONVITES
+                      </Button>
+                    </Block>
+                  </Block>
+                  <Block flex>
+                    <Block middle style={styles.nameInfo}>
+                      <Text bold size={28} color="#32325D">
+                        {user.Name.split(' ').slice(0,2).join(' ')}, {user.Age}
+                      </Text>
+                      <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
+                        {user.City}, {user.State}
+                      </Text>
+                    </Block>
+                    <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
+                      <Block style={styles.divider} />
+                    </Block>
+                    <Block middle>
+                      <Text
+                        numberOfLines={this.state.textShown ? undefined : 2}
+                        size={16}
+                        color="#525F7F"
+                        style={{ textAlign: "center" }}
+                      >
+                        {user.Description}
+                      </Text>
+                      <Button
+                        onPress={() => this.toggleNumberOfLines()}
+                        style={{ marginTop: 10 }}
+                        color="transparent"
+                        textStyle={{
+                          color: "#233DD2",
+                          fontWeight: "500",
+                          fontSize: 16
+                        }}
+                      >
+                        {!this.state.textShown ? 'Mostrar mais' : 'Mostrar menos'}
+                      </Button>
+                    </Block>
+                    <Block
+                      row
+                      style={{ paddingVertical: 14, alignItems: "baseline" }}
                     >
-                      {!this.state.textShown ? 'Mostrar mais' : 'Mostrar menos'}
-                    </Button>
-                  </Block>
-                  <Block
-                    row
-                    style={{ paddingVertical: 14, alignItems: "baseline" }}
-                  >
-                    <Text bold size={16} color="#525F7F">
-                      Fotos
-                    </Text>
-                  </Block>
-                  <Block style={{ paddingBottom: HeaderHeight }}>
-                    <Block row space="between" style={{ flexWrap: "wrap" }}>
-                      {Images.Viewed.map((img, imgIndex) => (
-                        <Image
-                          source={{ uri: img }}
-                          key={`viewed-${img}`}
-                          resizeMode="cover"
-                          style={styles.thumb}
-                        />
-                      ))}
+                      <Text bold size={16} color="#525F7F">
+                        Fotos
+                      </Text>
+                    </Block>
+                    <Block style={{ paddingBottom: HeaderHeight }}>
+                      <Block row space="between" style={{ flexWrap: "wrap" }}>
+                        {user.ProfileImages.map((img, imgIndex) => (
+                          <Image
+                            source={{ uri: img.Url }}
+                            key={`viewed-${img.Url}`}
+                            resizeMode="cover"
+                            style={styles.thumb}
+                          />
+                        ))}
+                      </Block>
                     </Block>
                   </Block>
                 </Block>
-              </Block>
-            </ScrollView>
-          </ImageBackground>
+              </ScrollView>
+            </ImageBackground>
+          </Block>
         </Block>
-      </Block>
+      </LoadingScreen>
     );
   }
 }
@@ -229,4 +216,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+const mapStateToProps = state => ({
+  isLoading: state.isLoading[get]
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatch,
+  dispatchGet: params => dispatch(get(params))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

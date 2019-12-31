@@ -1,11 +1,11 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
-import { StyleSheet, Dimensions, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { Block, Text, theme } from 'galio-framework';
 
 import { argonTheme } from '../constants';
-
+import { Truncate } from "../constants/utils";
 
 class Card extends React.Component {
   render() {
@@ -23,16 +23,16 @@ class Card extends React.Component {
 
     return (
       <Block row={horizontal} card flex style={cardContainer}>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('NotificationDetails')}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('EventDetails', { event: item })}>
           <Block flex style={imgContainer}>
-            <Image source={{uri: item.image}} style={imageStyles} />
+            <Image source={{uri: item.Image}} style={imageStyles} />
           </Block>
         </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('NotificationDetails')}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate('EventDetails', { event: item })}>
           <Block flex style={styles.cardDescription}>
-            <Text size={14}>{item.title}</Text>
-            <Text size={12} color={theme.COLORS.MUTED} style={styles.cardPrice}>{item.description}</Text>
-            <Text size={12} muted={!ctaColor} color={ctaColor || argonTheme.COLORS.ACTIVE} bold>{item.date}</Text>
+            <Text size={14}>{item.Name}</Text>
+            <Text size={12} color={theme.COLORS.MUTED} style={styles.cardPrice}>{Truncate(item.Description, 75)}</Text>
+            <Text size={12} muted={!ctaColor} color={ctaColor || argonTheme.COLORS.ACTIVE} bold>{item.StartAt}</Text>
           </Block>
         </TouchableWithoutFeedback>
       </Block>
