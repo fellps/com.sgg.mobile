@@ -19,6 +19,8 @@ import Notifications from "../screens/Notifications";
 import NotificationDetails from "../screens/NotificationDetails";
 import EventDetails from "../screens/EventDetails";
 import Schedule from "../screens/Schedule";
+import Register from "../screens/Register";
+import RecoverPassword from '../screens/RecoverPassword';
 
 // drawer
 import Menu from "./Menu";
@@ -179,6 +181,29 @@ const HomeStack = createStackNavigator(
   }
 );
 
+const AuthStack = createStackNavigator(
+  {
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        header: null,
+      }
+    },
+    Register: {
+      screen: Register,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header back title="Criar cadastro" navigation={navigation} />
+      })
+    },
+    RecoverPassword: {
+      screen: RecoverPassword,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header back title="Recuperar senha" navigation={navigation} />
+      })
+    }
+  }
+)
+
 const AppStack = createDrawerNavigator(
   {
     Onboarding: {
@@ -219,8 +244,8 @@ const AppStack = createDrawerNavigator(
         )
       })
     },
-    Login: {
-      screen: Login,
+    Auth: {
+      screen: AuthStack,
       navigationOptions: navOpt => ({
         drawerLabel: ({ focused }) => (
           <DrawerItem focused={focused} screen="Login" title="Sair" />

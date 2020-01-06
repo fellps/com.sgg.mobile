@@ -6,19 +6,24 @@ import {
   Dimensions,
   StatusBar,
   KeyboardAvoidingView,
-  Linking
+  View
 } from "react-native";
 import { Block, Text } from "galio-framework";
 
 import { connect } from 'react-redux';
+import { HelperText } from 'react-native-paper';
 
 import { AsyncStorage } from 'react-native';
 
-import { Button, Icon, Input } from "../components";
+import { Button, Icon, Input, Root, Popup } from "../components";
 import LoadingScreen from '../components/Loading'
 import { Images, argonTheme } from "../constants";
 
 import { set, login as loginAction } from './reducers/login/actions';
+
+import * as Validator from "../helpers/validators";
+
+import _ from 'lodash';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -28,7 +33,18 @@ class Login extends React.Component {
 
     this.state = {
       login: null,
-      password: null
+      password: null,
+      inputErrors: {}
+    }
+  }
+  
+  async componentDidMount() {
+    const { navigation } = this.props;
+
+    const loggedUserCookie = await AsyncStorage.getItem('loggedUser')
+
+    if (!_.isEmpty(JSON.parse(loggedUserCookie))) {
+      navigation.navigate("Home");
     }
   }
 
@@ -38,6 +54,16 @@ class Login extends React.Component {
     const { dispatchLogin, navigation } = this.props;
     const { login, password } = this.state;
 
+    this.setState({ inputErrors: {} })
+
+    if (!Validator.Email(login)) {
+      this.setState({ inputErrors: {login: true}});
+      return;
+    } else if (password.length < 6) {
+      this.setState({ inputErrors: {password: true}});
+      return;
+    }
+
     const params = {
       Login: login,
       Password: password
@@ -45,110 +71,139 @@ class Login extends React.Component {
 
     try {
       const { value: { data: loggedUser } } = await dispatchLogin(params);
-      await AsyncStorage.setItem('loggedUser', JSON.stringify('{}'));
-      await AsyncStorage.setItem('loggedUser', JSON.stringify(loggedUser.data));
-      navigation.navigate("Home");
+
+      if (!loggedUser.data.error) {
+        await AsyncStorage.setItem('loggedUser', JSON.stringify('{}'));
+        await AsyncStorage.setItem('loggedUser', JSON.stringify(loggedUser.data));
+        navigation.navigate("Home");
+      }
     } catch (err) {
-      console.log('err', err);
+      Popup.show({
+        type: 'Danger',
+        title: 'Ops :(',
+        button: true,
+        textBody: 'Email ou senha inválidos!',
+        buttonText: 'Ok',
+        callback: async () => Popup.hide()
+      })
     }
   }
 
   render() {
+    const { navigation } = this.props;
+
     return (
-      <LoadingScreen visible={this.props.isLoading}>
-        <Block flex center>
-          <StatusBar hidden />
-          <ImageBackground
-            source={Images.Onboarding}
-            style={{ width, height, zIndex: 1 }}
-          >
-            <Block center>
-              <Image source={Images.LogoOnboarding} style={styles.logo} />
-            </Block>
-            <Block flex middle>
-              <Block style={styles.registerContainer}>
-                <Block flex>
-                  <Block flex={0.17} middle>
-                    <Text color="#8898AA" size={12}>
-                      Informe os seus dados de acesso
-                    </Text>
-                  </Block>
-                  <Block flex center>
-                    <KeyboardAvoidingView
-                      style={{ flex: 1 }}
-                      behavior="padding"
-                      enabled
-                    >
-                      <Block width={width * 0.8} style={{ marginBottom: 15, marginTop: 20 }}>
-                        <Input
-                          borderless
-                          placeholder="Email"
-                          onChangeText={login => this.setState({ login })}
-                          iconContent={
-                            <Icon
-                              size={16}
-                              color={argonTheme.COLORS.ICON}
-                              name="ic_mail_24px"
-                              family="ArgonExtra"
-                              style={styles.inputIcons}
-                            />
-                          }
-                        />
-                      </Block>
-                      <Block width={width * 0.8}>
-                        <Input
-                          password
-                          borderless
-                          placeholder="Senha"
-                          onChangeText={password => this.setState({ password })}
-                          iconContent={
-                            <Icon
-                              size={16}
-                              color={argonTheme.COLORS.ICON}
-                              name="padlock-unlocked"
-                              family="ArgonExtra"
-                              style={styles.inputIcons}
-                            />
-                          }
-                        />
-                      </Block>
-                      <Block middle>
-                        <Button 
-                          color="primary" 
-                          style={styles.createButton}
-                          onPress={this._submit}>
-                          <Text bold size={14} color={argonTheme.COLORS.WHITE}>
-                            ENTRAR
-                          </Text>
-                        </Button>
-                      </Block>
-                      <Block row style={styles.linksContainer}>
-                        <Block flex left>
-                          <Text 
-                            style={styles.textLink}
-                            color={argonTheme.COLORS.DEFAULT}
-                            onPress={() => Linking.openURL('http://sgg-site.s3-website-sa-east-1.amazonaws.com/')}
-                          >
-                            Cadastrar
-                          </Text>
+      <Root>
+        <LoadingScreen visible={this.props.isLoading}>
+          <Block flex center>
+            <StatusBar hidden />
+            <ImageBackground
+              source={Images.Onboarding}
+              style={{ width, height, zIndex: 1 }}
+            >
+              <Block center>
+                <Image source={Images.LogoOnboarding} style={styles.logo} />
+              </Block>
+              <Block flex middle>
+                <Block style={styles.registerContainer}>
+                  <Block flex>
+                    <Block flex={0.17} middle>
+                      <Text color="#8898AA" size={12}>
+                        Informe os seus dados de acesso
+                      </Text>
+                    </Block>
+                    <Block flex center>
+                      <KeyboardAvoidingView
+                        style={{ flex: 1 }}
+                        behavior="padding"
+                        enabled
+                      >
+                        <Block width={width * 0.8} style={{ marginBottom: 15, marginTop: 20 }}>
+                          <Input
+                            placeholder="Email"
+                            onChangeText={login => this.setState({ login })}
+                            error={this.state.inputErrors.login}
+                            iconContent={
+                              <Icon
+                                size={16}
+                                color={argonTheme.COLORS.ICON}
+                                name="ic_mail_24px"
+                                family="ArgonExtra"
+                                style={styles.inputIcons}
+                              />
+                            }
+                          />
+                          <HelperText style={{ marginTop: -10, marginLeft: -10 }} type="error" visible={this.state.inputErrors.login === true}>
+                            Preencha o campo email corretamente!
+                          </HelperText>
                         </Block>
-                        <Block flex={1.25} right>
-                          <Text 
-                            style={styles.textLink}
-                            color={argonTheme.COLORS.DEFAULT}
-                          >
-                            Esqueci minha senha
-                          </Text>
+                        <Block width={width * 0.8} style={{ marginTop: -25 }}>
+                          <Input
+                            password
+                            placeholder="Senha"
+                            onChangeText={password => this.setState({ password })}
+                            error={this.state.inputErrors.password}
+                            iconContent={
+                              <Icon
+                                size={16}
+                                color={argonTheme.COLORS.ICON}
+                                name="padlock-unlocked"
+                                family="ArgonExtra"
+                                style={styles.inputIcons}
+                              />
+                            }
+                          />
+                          <HelperText style={{ marginTop: -10, marginLeft: -10 }} type="error" visible={this.state.inputErrors.password === true}>
+                            Preencha o campo senha corretamente!
+                          </HelperText>
                         </Block>
-                      </Block>
-                    </KeyboardAvoidingView>
+                        <Block middle style={{ marginTop: -10 }}>
+                          <Button 
+                            color="primary" 
+                            style={styles.createButton}
+                            onPress={this._submit}>
+                            <Text bold size={14} color={argonTheme.COLORS.WHITE}>
+                              ENTRAR
+                            </Text>
+                          </Button>
+                        </Block>
+                        <View style={{flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center', flex: 1, flexDirection: 'row'}}>
+                          <View>
+                            <Text 
+                              style={styles.textLink}
+                              color={argonTheme.COLORS.DEFAULT}
+                              onPress={() => navigation.navigate("Register")}
+                            >
+                              Criar cadastro
+                            </Text>
+                          </View>
+                          <View style={{ marginLeft: 10, marginRight: 10 }}>
+                            <Text 
+                              style={styles.textLink}
+                              color={argonTheme.COLORS.DEFAULT}
+                            >
+                              |
+                            </Text>
+                          </View >
+                          <View>
+                            <Text 
+                              style={styles.textLink}
+                              color={argonTheme.COLORS.DEFAULT}
+                              onPress={() => navigation.navigate("RecoverPassword")}
+                            >
+                              Recuperar senha
+                            </Text>
+                          </View >
+                        </View>
+                      </KeyboardAvoidingView>
+                    </Block>
                   </Block>
                 </Block>
               </Block>
-            </Block>
-          </ImageBackground>
-        </Block>
-      </LoadingScreen>
+            </ImageBackground>
+          </Block>
+        </LoadingScreen>
+      </Root>
     );
   }
 }

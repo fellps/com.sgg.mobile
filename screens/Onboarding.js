@@ -16,7 +16,9 @@ const { height, width } = Dimensions.get("screen");
 import argonTheme from "../constants/Theme";
 import Images from "../constants/Images";
 
-import _ from 'lodash'
+import _ from 'lodash';
+
+import Constants from 'expo-constants';
 
 class Onboarding extends React.Component {
   registerForPushNotificationsAsync = async () => {
@@ -35,22 +37,41 @@ class Onboarding extends React.Component {
     }
     
     let token = await Notifications.getExpoPushTokenAsync();
-    AsyncStorage.setItem('pushToken', token)
+    if (token) {
+      AsyncStorage.setItem('pushToken', token)
+    }
+  }
+
+  registerCameraAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.CAMERA_ROLL
+    );
+    let finalStatus = existingStatus;
+    
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      finalStatus = status;
+    }
+    
+    if (finalStatus !== 'granted') {
+      return;
+    }
   }
 
   async componentDidMount() {
     const { navigation } = this.props;
 
-    await this.registerForPushNotificationsAsync();
+    if (Constants.isDevice) await this.registerForPushNotificationsAsync();
+    await this.registerCameraAsync();
+    
     Notifications.addListener(this._handleNotification);
-
 
     const loggedUserCookie = await AsyncStorage.getItem('loggedUser')
     const welcome = await AsyncStorage.getItem('welcome')
 
     if (!_.isEmpty(JSON.parse(loggedUserCookie))) {
       navigation.navigate("Home");
-    } else if (welcome) {
+    } else if (welcome === "clicked") {
       navigation.navigate("Login");
     }
   }
@@ -99,7 +120,7 @@ class Onboarding extends React.Component {
                   style={styles.button}
                   color={argonTheme.COLORS.SECONDARY}
                   onPress={() => { 
-                    AsyncStorage.setItem('welcome', true);
+                    AsyncStorage.setItem('welcome', 'clicked');
                     navigation.navigate("Login");
                   }}
                   textStyle={{ color: argonTheme.COLORS.BLACK }}
