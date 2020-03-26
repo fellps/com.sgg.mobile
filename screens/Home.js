@@ -75,6 +75,8 @@ class Home extends React.Component {
       const PushToken = await AsyncStorage.getItem('pushToken')
       await dispatchUpdatePushToken({ PushToken })
 
+      console.log('PushToken', PushToken)
+
       const totalHighlights = 5
       const { value: { data: highlights } } = await dispatchGet({ limit: totalHighlights, offset: 0 });
       const { value: { data: events } } = await dispatchGet({ limit: 50, offset: totalHighlights });
@@ -83,7 +85,7 @@ class Home extends React.Component {
       this.setState({ events: events.data })
     } catch (err) {
       if (err.message === 'Request failed with status code 403') {
-        await AsyncStorage.setItem('loggedUser', '{}');
+        await AsyncStorage.setItem('loggedUser', JSON.stringify('{}'));
         navigation.navigate("Login");
       }
     }

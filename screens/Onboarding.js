@@ -42,7 +42,7 @@ class Onboarding extends React.Component {
     }
   }
 
-  registerCameraAsync = async () => {
+  registerCameraRollAsync = async () => {
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.CAMERA_ROLL
     );
@@ -58,10 +58,28 @@ class Onboarding extends React.Component {
     }
   }
 
+  registerCameraAsync = async () => {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.CAMERA
+    );
+
+    let finalStatus = existingStatus;
+    
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA);
+      finalStatus = status;
+    }
+    
+    if (finalStatus !== 'granted') {
+      return;
+    }
+  }
+  
   async componentDidMount() {
     const { navigation } = this.props;
 
     if (Constants.isDevice) await this.registerForPushNotificationsAsync();
+    await this.registerCameraRollAsync();
     await this.registerCameraAsync();
     
     Notifications.addListener(this._handleNotification);
@@ -69,8 +87,14 @@ class Onboarding extends React.Component {
     const loggedUserCookie = await AsyncStorage.getItem('loggedUser')
     const welcome = await AsyncStorage.getItem('welcome')
 
-    if (!_.isEmpty(JSON.parse(loggedUserCookie))) {
-      navigation.navigate("Home");
+    const loggedUser = JSON.parse(loggedUserCookie)
+
+    if (!_.isEmpty(loggedUser.token)) {
+      if (loggedUser.user.data.IdUserStatus === 5) {
+        navigation.navigate("UploadDocuments");
+      } else if (loggedUser.user.data.IdUserStatus === 1) {
+        navigation.navigate("Home");
+      }
     } else if (welcome === "clicked") {
       navigation.navigate("Login");
     }

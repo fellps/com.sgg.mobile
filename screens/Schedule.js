@@ -14,6 +14,8 @@ import Timeline from 'react-native-timeline-listview';
 
 import { getSchedule } from './reducers/notifications/actions';
 
+import _ from 'lodash';
+
 class Schedule extends Component {
   constructor(){
     super()
@@ -63,6 +65,8 @@ renderFooter() {
   }
 
   render() {
+    const { navigation } = this.props;
+
     if (this.state.data.length <= 0) {
       return (
         <LoadingScreen visible={this.props.isLoading}>
@@ -95,6 +99,11 @@ renderFooter() {
               ),
               renderFooter: this.renderFooter,
               onEndReached: this.onEndReached
+            }}
+            onEventPress={(e) => { 
+              const job = _.find(this.state.data, { title: e.title, time: e.time })
+              job.Accepted = true
+              navigation.navigate("NotificationDetails", { job })
             }}
             innerCircle={'dot'}
           />

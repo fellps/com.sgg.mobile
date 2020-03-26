@@ -20,6 +20,7 @@ import NotificationDetails from "../screens/NotificationDetails";
 import EventDetails from "../screens/EventDetails";
 import Schedule from "../screens/Schedule";
 import Register from "../screens/Register";
+import UploadDocuments from "../screens/UploadDocuments";
 import RecoverPassword from '../screens/RecoverPassword';
 
 // drawer
@@ -193,6 +194,12 @@ const AuthStack = createStackNavigator(
       screen: Register,
       navigationOptions: ({ navigation }) => ({
         header: <Header back title="Criar cadastro" navigation={navigation} />
+      })
+    },
+    UploadDocuments: {
+      screen: UploadDocuments,
+      navigationOptions: ({ navigation }) => ({
+        header: <Header back title="Segunda Seleção" navigation={navigation} />
       })
     },
     RecoverPassword: {

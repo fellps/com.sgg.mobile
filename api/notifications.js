@@ -28,6 +28,17 @@ export const accept = async ({ IdJob, Accepted } = {}) => {
   })
 }
 
+export const cancel = async ({ IdJob } = {}) => {
+  const { token } = await loggedUser()
+  return request.post('/jobs/cancel', qs.stringify({
+    IdJob
+  }), {
+    headers: {
+      'x-access-token': token
+    }
+  })
+}
+
 export const getSchedule = async () => {
   const { token } = await loggedUser()
   return request.post('/jobs/schedule', {}, {

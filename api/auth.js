@@ -1,4 +1,4 @@
-import request from './index'
+import request, { loggedUser } from './index'
 import qs from 'querystring'
 import toFormData from '../helpers/toFormData'
 import { Platform } from 'react-native';
@@ -21,6 +21,27 @@ export const register = async ({ Photos, Data }) => {
     return request.post(`/users`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
+        }
+    })
+}
+
+export const registerDocuments = async ({ Documents, Data }) => {
+    const { token } = await loggedUser()
+
+    const formData = toFormData(Data)
+
+    Documents.forEach((document) => {
+        formData.append('files', {
+            name: document.filename,
+            type: 'image/jpeg',
+            uri: Platform.OS === 'android' ? document.uri : document.uri.replace('file://', '')
+        })
+    })
+  
+    return request.post(`/DocumentsUpdate`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'x-access-token': token
         }
     })
 }

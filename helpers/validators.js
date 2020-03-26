@@ -1,4 +1,4 @@
-export const Email = (email) => (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
+export const Email = (email) => (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email.trim()));
 
 export const Name = (name) => (/^[a-zA-Z]+ [a-zA-Z]+$/.test(name));
 

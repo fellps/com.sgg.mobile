@@ -44,7 +44,11 @@ class Login extends React.Component {
     const loggedUserCookie = await AsyncStorage.getItem('loggedUser')
 
     if (!_.isEmpty(JSON.parse(loggedUserCookie))) {
-      navigation.navigate("Home");
+      if (loggedUserCookie.data.user.data.IdUserStatus === 5) {
+        navigation.navigate("UploadDocuments");
+      } else {
+        navigation.navigate("Home");
+      }
     }
   }
 
@@ -56,7 +60,7 @@ class Login extends React.Component {
 
     this.setState({ inputErrors: {} })
 
-    if (!Validator.Email(login)) {
+    if (!Validator.Email(login.trim())) {
       this.setState({ inputErrors: {login: true}});
       return;
     } else if (password.length < 6) {
@@ -65,7 +69,7 @@ class Login extends React.Component {
     }
 
     const params = {
-      Login: login,
+      Login: login.trim(),
       Password: password
     }
 
@@ -75,7 +79,12 @@ class Login extends React.Component {
       if (!loggedUser.data.error) {
         await AsyncStorage.setItem('loggedUser', JSON.stringify('{}'));
         await AsyncStorage.setItem('loggedUser', JSON.stringify(loggedUser.data));
-        navigation.navigate("Home");
+
+        if (loggedUser.data.user.data.IdUserStatus === 5) {
+          navigation.navigate("UploadDocuments");
+        } else {
+          navigation.navigate("Home");
+        }
       }
     } catch (err) {
       Popup.show({

@@ -5,7 +5,8 @@ import {
   ScrollView,
   ImageBackground,
   Platform,
-  StatusBar
+  StatusBar,
+  Image
 } from "react-native";
 import { Block, Text, theme } from "galio-framework";
 
@@ -16,12 +17,14 @@ import { HeaderHeight } from "../constants/utils";
 const { width, height } = Dimensions.get("screen");
 
 const thumbMeasure = (width - 48 - 32) / 3;
+const cardWidth = width - theme.SIZES.BASE * 2;
 
 class EventDetails extends React.Component {
   render() {
     const { navigation } = this.props;
 
     const event = navigation.getParam('event');
+    console.log(event)
 
     return (
       <Root>
@@ -37,39 +40,46 @@ class EventDetails extends React.Component {
                 showsVerticalScrollIndicator={false}
                 style={{ width, marginTop: '25%' }}
               >
-                <Block flex style={styles.profileCard}>
-                  <Block middle style={styles.avatarContainer}>
-                    <Text
-                      bold
-                      size={22}
-                      color="#FFFFFF"
-                      style={{ marginBottom: 4 }}
-                    >
-                      {event.Name}
-                    </Text>
-                  </Block>
-                  <Block flex>
-                    <Block middle style={styles.nameInfo}>
-                      <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                        Data: {event.StartAt}
-                      </Text>
-                      <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                        {event.Address}
-                      </Text>
-                    </Block>
-                    <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
-                      <Block style={styles.divider} />
-                    </Block>
-                    <Block middle>
+                <Block center>
+                  <Block flex style={styles.profileCard}>
+                    <Block middle style={styles.avatarContainer}>
                       <Text
-                        size={16}
-                        color="#525F7F"
-                        style={{ textAlign: "center" }}
+                        bold
+                        size={22}
+                        color="#FFFFFF"
+                        style={{ marginBottom: 4 }}
                       >
-                        {event.Description}
+                        {event.Name}
                       </Text>
                     </Block>
+                    <Block flex>
+                      <Block middle style={styles.nameInfo}>
+                        <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
+                          Data: {event.StartAt}
+                        </Text>
+                        <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
+                          {event.Address}
+                        </Text>
+                      </Block>
+                      <Block middle style={{ marginTop: 30, marginBottom: 16 }}>
+                        <Block style={styles.divider} />
+                      </Block>
+                      <Block middle>
+                        <Text
+                          size={16}
+                          color="#525F7F"
+                          style={{ textAlign: "center" }}
+                        >
+                          {event.Description}
+                        </Text>
+                      </Block>
+                    </Block>
                   </Block>
+                  <Image
+                    resizeMode="cover"
+                    style={styles.productImage}
+                    source={{ uri: event.Image }}
+                  />
                 </Block>
               </ScrollView>
             </ImageBackground>
@@ -114,11 +124,12 @@ const styles = StyleSheet.create({
     position: "relative",
     marginTop: -80
   },
-  avatar: {
-    width: 124,
-    height: 124,
-    borderRadius: 62,
-    borderWidth: 0
+  productImage: {
+    width: cardWidth,
+    height: cardWidth - theme.SIZES.BASE,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    marginBottom: 65
   },
   nameInfo: {
     marginTop: 35

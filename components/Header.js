@@ -1,7 +1,10 @@
 import React from 'react';
 import { withNavigation } from 'react-navigation';
+import { connect } from 'react-redux';
 import { TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
 import { Button, Block, NavBar, Text, theme } from 'galio-framework';
+
+import { get } from '../screens/reducers/notifications/actions';
 
 import Icon from './Icon';
 import Input from './Input';
@@ -11,17 +14,24 @@ import argonTheme from '../constants/Theme';
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
 
-const BellButton = ({isWhite, style, navigation}) => (
-  <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Notifications')}>
-    <Icon
-      family="ArgonExtra"
-      size={16}
-      name="bell"
-      color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
-    />
-    <Block middle style={styles.notify} />
-  </TouchableOpacity>
-);
+const BellButton = ({isWhite, style, navigation, notifications}) => {
+  let showNotify = false
+  if (notifications && notifications.length > 0) {
+    notifications.map((item, index) => {
+      showNotify = showNotify || item.Accepted === null
+    })
+  }
+  return (
+    <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Notifications')}>
+      <Icon
+        family="ArgonExtra"
+        size={16}
+        name="bell"
+        color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+      />
+      { showNotify ? <Block middle style={styles.notify} /> : <Block/> }
+    </TouchableOpacity>)
+};
 
 const BasketButton = ({isWhite, style, navigation}) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('NotificationDetails')}>
@@ -46,11 +56,24 @@ const SearchButton = ({isWhite, style, navigation}) => (
 );
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      notifications: []
+    };
+  }
+
+  async componentDidMount() {
+    const { dispatchGet } = this.props;
+    const { value: { data: notifications } } = await dispatchGet();
+    this.setState({ notifications: notifications.data });
+  }
+
   handleLeftPress = () => {
     const { back, navigation } = this.props;
     return (back ? navigation.goBack() : navigation.openDrawer());
   }
-  renderRight = () => {
+  renderRight = (notifications) => {
     const { white, title, navigation } = this.props;
     const { routeName } = navigation.state;
 
@@ -64,7 +87,7 @@ class Header extends React.Component {
     switch (routeName) {
       case 'Home':
         return ([
-          <BellButton key='chat-home' navigation={navigation} isWhite={white} />
+          <BellButton key='chat-home' navigation={navigation} isWhite={white} notifications={notifications} />
         ]);
       case 'Deals':
         return ([
@@ -165,6 +188,7 @@ class Header extends React.Component {
     }
   }
   render() {
+    const { notifications } = this.state;
     const { back, title, white, transparent, bgColor, iconColor, titleColor, navigation, ...props } = this.props;
     const { routeName } = navigation.state;
     const noShadow = ['Search', 'Categories', 'Deals', 'Pro', 'Profile'].includes(routeName);
@@ -184,7 +208,7 @@ class Header extends React.Component {
           title={title}
           style={navbarStyles}
           transparent={transparent}
-          right={this.renderRight()}
+          right={this.renderRight(notifications)}
           rightStyle={{ alignItems: 'center' }}
           left={
             <Icon 
@@ -275,4 +299,16 @@ const styles = StyleSheet.create({
   },
 });
 
-export default withNavigation(Header);
+const mapStateToProps = state => ({
+  isLoading: state.isLoading[get]
+})
+
+const mapDispatchToProps = dispatch => ({
+  dispatch,
+  dispatchGet: params => dispatch(get(params))
+})
+
+export default withNavigation(connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(Header))

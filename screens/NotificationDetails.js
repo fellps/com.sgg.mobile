@@ -17,7 +17,7 @@ import LoadingScreen from '../components/Loading'
 import { Images } from "../constants";
 import { HeaderHeight } from "../constants/utils";
 
-import { accept } from './reducers/notifications/actions';
+import { accept, cancel } from './reducers/notifications/actions';
 
 const { width, height } = Dimensions.get("screen");
 
@@ -49,17 +49,31 @@ class NotificationDetails extends React.Component {
         callback: async () => this.props.navigation.navigate('Home')
       })
     } else {
-      Popup.show({
-        type: 'Success',
-        title: 'Parabéns :)',
-        button: true,
-        textBody: 'Você aceitou o convite para trabalhar como Bartender!',
-        buttonText: 'Ver minha agenda',
-        callback: async () => {
-          this.props.navigation.navigate('Home');
-          this.props.navigation.navigate('Schedule');
-        }
-      })
+      if (!result.extraVacancie) {
+        Popup.show({
+          type: 'Success',
+          title: 'Parabéns :)',
+          button: true,
+          textBody: 'Você aceitou o convite para trabalhar como Bartender!',
+          buttonText: 'Ver minha agenda',
+          callback: async () => {
+            this.props.navigation.navigate('Home');
+            this.props.navigation.navigate('Schedule');
+          }
+        })
+      } else {
+        Popup.show({
+          type: 'Warning',
+          title: 'Vaga reserva',
+          button: true,
+          textBody: 'Você entrou para a lista de reservas dessa vaga!',
+          buttonText: 'Ver minha agenda',
+          callback: async () => {
+            this.props.navigation.navigate('Home');
+            this.props.navigation.navigate('Schedule');
+          }
+        })
+      }
     }
   }
 
@@ -82,6 +96,24 @@ class NotificationDetails extends React.Component {
     })
   }
 
+  handleCancel = async () => {
+    const { navigation, dispatchCancel } = this.props;
+    const job = navigation.getParam('job');
+
+    const { value: { data: result } } = await dispatchCancel({ 
+      IdJob: job.IdJob
+    })
+
+    Popup.show({
+      type: 'Success',
+      title: 'Cancelamento realizado',
+      button: true,
+      textBody: 'Você cancelou esta vaga!',
+      buttonText: 'Ok',
+      callback: async () => this.props.navigation.navigate('Home')
+    })
+  }
+
   render() {
     const { navigation } = this.props;
 
@@ -89,7 +121,9 @@ class NotificationDetails extends React.Component {
 
     const job = navigation.getParam('job')
 
-    if (job && job.Accepted == null) {
+    console.log(job)
+
+    if (job && job.Accepted === null) {
       buttons = 
         <Block row space="evenly" style={styles.blockButtons}>
           <Block flex left>
@@ -109,11 +143,32 @@ class NotificationDetails extends React.Component {
             </Button>
           </Block>
         </Block>
+    } else if (job.Accepted === true && job.DateDiff > 24) {
+      buttons = 
+        <Block row space="evenly" style={styles.blockButtons}>
+          <Block flex center>
+            <Button 
+              color="warning" 
+              style={styles.optionsButton}
+              onPress={this.handleCancel}>
+              CANCELAR VAGA
+            </Button>
+          </Block>
+        </Block>
+    } else {
+      buttons = 
+      <Block row space="evenly" style={styles.blockButtons}>
+        <Block flex center>
+          <Text bold size={16} color="#32325D" style={{ paddingTop: 10, textAlign: "center" }}>
+            Para cancelar esta vaga, entre em contato com a administração!
+          </Text>
+        </Block>
+      </Block>
     }
 
     return (
       <Root>
-        <LoadingScreen visible={this.props.isLoading}>
+        <LoadingScreen visible={this.props.isLoading || this.props.isLoadingCancel}>
           <Block flex style={styles.profile}>
             <StatusBar barStyle="light-content" />
             <Block flex>
@@ -140,10 +195,10 @@ class NotificationDetails extends React.Component {
                     <Block flex>
                       <Block middle style={styles.nameInfo}>
                         <Text bold size={28} color="#32325D">
-                          {job.Title}
+                          {job.Title || job.title}
                         </Text>
                         <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
-                          Data: {job.StartAt}
+                          Data: {job.StartAt || job.time}
                         </Text>
                         <Text size={16} color="#32325D" style={{ marginTop: 10 }}>
                           {job.Address}
@@ -158,7 +213,7 @@ class NotificationDetails extends React.Component {
                           color="#525F7F"
                           style={{ textAlign: "center" }}
                         >
-                          {job.Body}
+                          {job.Body || job.description}
                         </Text>
                         {buttons}
                       </Block>
@@ -246,12 +301,14 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  isLoading: state.isLoading[accept]
+  isLoading: state.isLoading[accept],
+  isLoadingCancel: state.isLoading[cancel],
 })
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
-  dispatchAccept: params => dispatch(accept(params))
+  dispatchAccept: params => dispatch(accept(params)),
+  dispatchCancel: params => dispatch(cancel(params)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationDetails);
