@@ -24,6 +24,8 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.sgp.mobile",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
     },
     "android": {
