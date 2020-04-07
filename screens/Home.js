@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     paddingTop: theme.SIZES.BASE
   },
   albumThumb: {
-    borderRadius: 4,
+    borderRadius: 0,
     marginVertical: 4,
     alignSelf: "center",
     width: thumbMeasure,
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   imageBlock: {
     overflow: "hidden",
-    borderRadius: 4
+    borderRadius: 0
   },
   productItem: {
     width: cardWidth - theme.SIZES.BASE * 2,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   productImage: {
     width: cardWidth - theme.SIZES.BASE,
     height: cardWidth - theme.SIZES.BASE,
-    borderRadius: 3
+    borderRadius: 0
   },
   productTitle: {
     paddingBottom: theme.SIZES.BASE * 2

@@ -1,7 +1,7 @@
 {
   "name": "sgg",
   "version": "1.0.0",
-  "description": "Sistema de gestão de gente",
+  "description": "Sistema de gestão de pessoas",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -48,8 +48,8 @@
     "babel-preset-expo": "^7.0.0"
   },
   "keywords": [
-    "sgg",
-    "sistema de gestão de gente"
+    "sgp",
+    "sistema de gestão de pessoas"
   ],
   "author": "Fellipe Vasconcelos <fellipe.fvs@gmail.com>",
   "license": "unlicensed",

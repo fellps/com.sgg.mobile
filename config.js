@@ -3,4 +3,3 @@ export default {
   //apiUrl: 'http://54.233.134.254:3001',
   siteUrl: 'http://sgg-site.s3-website-sa-east-1.amazonaws.com'
 }
-  

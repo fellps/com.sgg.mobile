@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 124,
     height: 124,
-    borderRadius: 62,
+    borderRadius: 0,
     borderWidth: 0
   },
   nameInfo: {
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     borderColor: "#E9ECEF"
   },
   thumb: {
-    borderRadius: 4,
+    borderRadius: 0,
     marginVertical: 4,
     alignSelf: "center",
     width: thumbMeasure,

@@ -154,7 +154,7 @@ class Elements extends React.Component {
             placeholder="Regular Custom"
             style={{
               borderColor: argonTheme.COLORS.INFO,
-              borderRadius: 4,
+              borderRadius: 0,
               backgroundColor: "#fff"
             }}
             iconContent={<Block />}
@@ -199,7 +199,7 @@ class Elements extends React.Component {
                 style={{
                   width: 20,
                   height: 20,
-                  borderRadius: 10,
+                  borderRadius: 0,
                   backgroundColor: argonTheme.COLORS.INPUT_SUCCESS
                 }}
               >

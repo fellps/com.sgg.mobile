@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     borderColor: "#E9ECEF"
   },
   thumb: {
-    borderRadius: 4,
+    borderRadius: 0,
     marginVertical: 4,
     alignSelf: "center",
     width: thumbMeasure,

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     height: height * 0.4,
     marginTop: -120,
     backgroundColor: "#F4F5F7",
-    borderRadius: 4,
+    borderRadius: 0,
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     marginRight: 12
   },
   createButton: {
+    borderRadius: 0,
     width: width * 0.5,
     marginTop: 25
   },

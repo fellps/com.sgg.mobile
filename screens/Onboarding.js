@@ -130,7 +130,7 @@ class Onboarding extends React.Component {
                 </Block>
                 <Block>
                   <Text color="white" size={45}>
-                    Gestão de Gente
+                    Gestão de Pessoas
                   </Text>
                 </Block>
                 <Block style={styles.subTitle}>
@@ -173,7 +173,8 @@ const styles = StyleSheet.create({
     width: width - theme.SIZES.BASE * 4,
     height: theme.SIZES.BASE * 3,
     shadowRadius: 0,
-    shadowOpacity: 0
+    shadowOpacity: 0,
+    borderRadius: 0
   },
   logo: {
     width: 200,

@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     alignItems: 'center',
     backgroundColor: argonTheme.COLORS.ACTIVE,
-    borderRadius: 4,
+    borderRadius: 0,
     marginRight: 9
   },
   containerShadow: {

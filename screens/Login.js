@@ -176,7 +176,7 @@ class Login extends React.Component {
                             </Text>
                           </Button>
                         </Block>
-                        <View style={{flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center', flex: 1, flexDirection: 'row'}}>
+                        <View style={{flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center', flex: 1, flexDirection: 'row', opacity: 0}}>
                           <View>
                             <Text 
                               style={styles.textLink}
@@ -225,13 +225,11 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: height * 0.55,
     backgroundColor: "#F4F5F7",
-    borderRadius: 4,
     shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
       height: 4
     },
-    shadowRadius: 8,
     shadowOpacity: 0.1,
     elevation: 1,
     overflow: "hidden"
@@ -245,6 +243,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30
   },
   createButton: {
+    borderRadius: 0,
     width: width * 0.5,
     marginTop: 25
   },

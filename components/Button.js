@@ -46,11 +46,11 @@ const styles = StyleSheet.create({
     height: 28
   },
   shadow: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 4,
-    shadowOpacity: 0.1,
-    elevation: 2,
+    // shadowColor: 'black',
+    // shadowOffset: { width: 0, height: 4 },
+    // shadowRadius: 4,
+    // shadowOpacity: 0.1,
+    // elevation: 2,
   },
 });
 

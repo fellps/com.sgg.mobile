@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: argonTheme.COLORS.INFO,
     paddingHorizontal: 8,
     marginLeft: 3,
-    borderRadius: 4,
+    borderRadius: 0,
     height: 22,
     marginTop: 15
   },

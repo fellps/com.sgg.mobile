@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
 		width: 230,
 		minHeight: 300,
 		backgroundColor: '#fff',
-		borderRadius: 4,
+		borderRadius: 0,
 		alignItems: 'center',
 		overflow: 'hidden',
 		position: 'absolute',

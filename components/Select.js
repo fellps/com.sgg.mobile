@@ -1,8 +1,12 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 
 import { argonTheme } from '../constants';
+
+import { Icon } from './'
+
+const { height, width } = Dimensions.get('window');
 
 class DropDown extends React.Component {
   constructor(props) {
@@ -25,6 +29,16 @@ class DropDown extends React.Component {
         {...props}
         value={this.props.value}
         style={pickerSelectStyles}
+        useNativeAndroidPickerStyle={false}
+        Icon = {() => (
+          <Icon
+            size={16}
+            style={{ position: 'absolute', top: -8, left: ((width * 0.76) * -1), zIndex: 99999 }}
+            color={argonTheme.COLORS.ICON}
+            name="user"
+            family="Entypo"
+          />
+        )}
       />
     )
   }
@@ -32,37 +46,39 @@ class DropDown extends React.Component {
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    fontSize: 12,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
+    fontSize: 25,
+    borderRadius: 0,
     borderColor: argonTheme.COLORS.BORDER,
+    borderWidth: 0.8,
     color: argonTheme.COLORS.DEFAULT,
-    shadowColor: argonTheme.COLORS.BLACK,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 2,
-    shadowOpacity: 0.05,
-    elevation: 2,
-    marginTop: 5,
-    marginBottom: 5,
-    paddingVertical: 12,
+    paddingVertical: 7,
     paddingHorizontal: 10,
+    zIndex: 1,
+    width: width * 0.8,
   },
   inputAndroid: {
-    fontSize: 12,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
+    fontSize: 25,
+    borderRadius: 0,
     borderColor: argonTheme.COLORS.BORDER,
+    borderWidth: 0.8,
     color: argonTheme.COLORS.DEFAULT,
-    shadowColor: argonTheme.COLORS.BLACK,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 2,
-    shadowOpacity: 0.05,
-    elevation: 2,
-    marginTop: 5,
-    marginBottom: 5,
-    paddingVertical: 12,
+    paddingVertical: 7,
     paddingHorizontal: 10,
+    zIndex: 1,
+    width: width * 0.8,
   },
+  inputAndroidContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    width: width * 0.8,
+    top: 5
+  },
+  placeholder: {
+    color: argonTheme.COLORS.MUTED,
+    paddingLeft: 47,
+    fontSize: 13
+  }
 });
 
 export default DropDown;

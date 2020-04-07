@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     padding: theme.SIZES.BASE / 2
   },
   imageContainer: {
-    borderRadius: 3,
     elevation: 1,
     overflow: 'hidden',
   },

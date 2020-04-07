@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   activeStyle: {
     backgroundColor: argonTheme.COLORS.ACTIVE,
-    borderRadius: 4
+    borderRadius: 0
   },
   shadow: {
     shadowColor: theme.COLORS.BLACK,
