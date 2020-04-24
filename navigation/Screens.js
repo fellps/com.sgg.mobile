@@ -9,6 +9,7 @@ import {
 // screens
 import Home from "../screens/Home";
 import Onboarding from "../screens/Onboarding";
+import TermsOfUse from "../screens/TermsOfUse";
 import Pro from "../screens/Pro";
 import Profile from "../screens/Profile";
 import Checkin from "../screens/Checkin";
@@ -213,6 +214,12 @@ const AuthStack = createStackNavigator(
 
 const AppStack = createDrawerNavigator(
   {
+    TermsOfUse: {
+      screen: TermsOfUse,
+      navigationOptions: {
+        drawerLabel: () => {}
+      }
+    },
     Onboarding: {
       screen: Onboarding,
       navigationOptions: {

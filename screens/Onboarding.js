@@ -89,7 +89,7 @@ class Onboarding extends React.Component {
 
     const loggedUser = JSON.parse(loggedUserCookie)
 
-    if (!_.isEmpty(loggedUser.token)) {
+    if (!_.isEmpty(loggedUser) && !_.isEmpty(loggedUser.token)) {
       if (loggedUser.user.data.IdUserStatus === 5) {
         navigation.navigate("UploadDocuments");
       } else if (loggedUser.user.data.IdUserStatus === 1) {
