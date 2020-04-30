@@ -176,7 +176,7 @@ class Login extends React.Component {
                             </Text>
                           </Button>
                         </Block>
-                        <View style={{flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center', flex: 1, flexDirection: 'row', opacity: 0}}>
+                        <View style={{flex: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center', flex: 1, flexDirection: 'row'}}>
                           <View>
                             <Text 
                               style={styles.textLink}
