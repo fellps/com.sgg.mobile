@@ -29,8 +29,7 @@ class Checkin extends Component {
             Leia esse QRCode para fazer o checkin :)
           </Text>
           <QRCode
-            value='xxx'
-            size={300}
+            value={this.state.code}
             fgColor='white'/>
         </Block>
       </Block>

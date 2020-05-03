@@ -33,7 +33,7 @@ import Header from "../components/Header";
 
 const transitionConfig = (transitionProps, prevTransitionProps) => ({
   transitionSpec: {
-    duration: 400,
+    duration: 300,
     easing: Easing.out(Easing.poly(4)),
     timing: Animated.timing
   },

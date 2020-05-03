@@ -68,7 +68,7 @@ class Profile extends React.Component {
                 <Block flex style={styles.profileCard}>
                   <Block middle style={styles.avatarContainer}>
                     <Image
-                      source={{ uri: user.ProfileImages[0].Url }}
+                      source={{ uri: user.ProfileImages[0] ? user.ProfileImages[0].Url : 'https://cdn.shopify.com/s/files/1/2805/6822/files/usericon_id76rb_large.png?v=1517817438' }}
                       style={styles.avatar}
                     />
                   </Block>

@@ -413,7 +413,6 @@ class Register extends React.Component {
                                           maxLength={15}
                                           value={this.state.phone}
                                           onChangeText={phone => this.setState({ phone: Formatter.Phone(phone) })}
-                                          
                                           keyboardType={'numeric'}
                                           placeholder="Telefone"
                                           iconContent={
@@ -618,13 +617,13 @@ class Register extends React.Component {
                                           title='Selecionar imagens'
                                           onPress={() => this.setState({ imageBrowserOpen: true })}
                                         />
-                                        <View style={styles.emptyContent}>
+                                        {/* <View style={styles.emptyContent}>
                                           <Text style={{color: argonTheme.COLORS.PLACEHOLDER}}>ou</Text>
                                         </View>
                                         <Button
                                           title='Tirar foto'
                                           onPress={() => this.setState({ cameraIsOpen: true })}
-                                        />
+                                        /> */}
                                         {this.renderImage(this.state.photos)}
                                         <HelperText type="error" visible={this.state.inputErrors.photos === true}>
                                           Selecione três imagens para finalizar o cadastro!

@@ -211,9 +211,9 @@ class Header extends React.Component {
           right={this.renderRight(notifications)}
           rightStyle={{ alignItems: 'center' }}
           left={
-            <Icon 
+            <Icon
               name={back ? 'nav-left' : "menu-8"} family="ArgonExtra" 
-              size={14} onPress={this.handleLeftPress} 
+              size={20} onPress={this.handleLeftPress} 
               color={iconColor || argonTheme.COLORS.ICON}/>
           }
           leftStyle={{ paddingVertical: 12, flex: 0.2 }}
