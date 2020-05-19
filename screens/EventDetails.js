@@ -29,7 +29,7 @@ class EventDetails extends React.Component {
     return (
       <Root>
         <Block flex style={styles.profile}>
-          <StatusBar barStyle="light-content" />
+          <StatusBar hidden />
           <Block flex>
             <ImageBackground
               source={Images.Onboarding}

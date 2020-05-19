@@ -170,7 +170,7 @@ class NotificationDetails extends React.Component {
       <Root>
         <LoadingScreen visible={this.props.isLoading || this.props.isLoadingCancel}>
           <Block flex style={styles.profile}>
-            <StatusBar barStyle="light-content" />
+            <StatusBar hidden />
             <Block flex>
               <ImageBackground
                 source={Images.ProfileBackground}
